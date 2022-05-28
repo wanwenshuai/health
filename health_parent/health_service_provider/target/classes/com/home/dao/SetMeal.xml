@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.home.dao.SetMealDao">
+	
+	<select id="selectSetMealByPagination" resultType="com.home.model.Setmeal">
+		select id,name,code,helpCode,sex,age,price,remark,attention,img
+		from t_setmeal
+		<where>
+			<if test="queryCondition != null and queryCondition.length > 0">
+				code=#{queryCondition} or name=#{queryCondition} or helpCode=#{queryCondition}
+			</if>
+		</where>
+    </select>
+	
+	<insert id="insertSetMeal" parameterType="com.home.model.Setmeal">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into t_setmeal
+		(name, code, helpCode, sex, age, price, remark, attention, img)
+		values
+		(#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
+	</insert>
+	
+	<insert id="insertSetMealAssociationCheckGroup">
+		insert into t_setmeal_checkgroup
+		(setmeal_id, checkgroup_id) value
+		<foreach collection="checkGroupIds" separator="," item="id">
+			(#{setMealId},#{id})
+		</foreach>
+	</insert>
+
+</mapper>

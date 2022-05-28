@@ -1,0 +1,15 @@
+com\home\entity\Result.class
+com\home\model\Permission.class
+com\home\model\Setmeal.class
+com\home\model\OrderSetting.class
+com\home\model\Role.class
+com\home\entity\QueryPageBean.class
+com\home\utils\QiNiuUtils.class
+com\home\entity\PageResult.class
+com\home\constant\MessageConstant.class
+com\home\model\CheckGroup.class
+com\home\model\CheckItem.class
+com\home\model\Menu.class
+com\home\model\Order.class
+com\home\model\User.class
+com\home\model\Member.class

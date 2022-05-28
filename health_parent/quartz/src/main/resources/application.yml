@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.14.181.108:3306/health?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: root
+    password: 110614
+    type: com.alibaba.druid.pool.DruidDataSource
+  main:
+    allowCircularReferences: true
+
