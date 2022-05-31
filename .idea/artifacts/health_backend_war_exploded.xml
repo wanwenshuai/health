@@ -104,6 +104,8 @@
           <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:2.6.0" />
           <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
           <element id="library" level="project" name="Maven: com.github.virtuald:curvesapi:1.03" />
+          <element id="library" level="project" name="Maven: com.aliyun:aliyun-java-sdk-core:3.7.1" />
+          <element id="library" level="project" name="Maven: org.json:json:20170516" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-data-redis:2.6.6" />
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-redis:2.6.3" />
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-keyvalue:2.6.3" />

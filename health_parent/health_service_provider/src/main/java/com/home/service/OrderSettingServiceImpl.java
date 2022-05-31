@@ -3,17 +3,11 @@ package com.home.service;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.home.dao.OrderSettingDao;
 import com.home.model.OrderSetting;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @date 2022/5/26 14:40
@@ -46,9 +40,45 @@ public class OrderSettingServiceImpl implements OrderSettingService {
                 }
                 if (i == 0) throw new RuntimeException();
             }
-           /* row.forEach(cell->{
+        }
+    }
 
-            });*/
+    @Override
+    public List<Map<String,Integer>> queryOrderSettingByMonth(String date) {
+        String start = date + "-1";
+        String end = date + "-31";
+
+        Map<String,String> startDateAndEndDate = new HashMap<>();
+        startDateAndEndDate.put("start",start);
+        startDateAndEndDate.put("end",end);
+
+        List<OrderSetting> orderSettings = orderSettingDao.selectOrderSettingByMonth(startDateAndEndDate);
+
+        List<Map<String,Integer>> list = new ArrayList<>();
+
+        orderSettings.forEach(orderSetting -> {
+            Map<String,Integer> map = new HashMap<>();
+            map.put("date",orderSetting.getOrderDate().getDate());
+            map.put("number",orderSetting.getNumber());
+            map.put("reservations",orderSetting.getReservations());
+            list.add(map);
+        });
+
+        return list;
+    }
+
+    @Override
+    public void orderSettingNumber(OrderSetting orderSetting) {
+        // 根据日期查询是否可添加
+        long count = orderSettingDao.selectCountByDate(orderSetting.getOrderDate());
+        if (count != 1){
+            // 说明没有设置该日期的可预约人数
+            int i = orderSettingDao.addExcelRow(orderSetting);
+            if (i != 1) throw new RuntimeException();
+        }else {
+            // 执行更新操作
+            int i = orderSettingDao.updateNumberByDate(orderSetting);
+            if (i != 1) throw new RuntimeException();
         }
     }
 }

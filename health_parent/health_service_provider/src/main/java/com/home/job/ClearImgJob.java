@@ -18,7 +18,7 @@ public class ClearImgJob {
     @Autowired
     private RedisUtils redisUtils;
 
-    @Scheduled(cron = "0/50 * * * * ?")
+    @Scheduled(cron = "0 0 0 1 1/1 ?")
     public void clearImg(){
         // 根据redis中保存的两个集合进行差值计算，获取垃圾图片名称集合
         Set<Object> big = redisUtils.sGet(RedisConstant.SETMEAL_PIC_RESOURCES);

@@ -139,39 +139,68 @@
             },
             methods: {
 				//预约设置
-                handleOrderSet(day){
-                },
-				//上传之前进行文件格式校验
-                beforeUpload(file){
-                    const isXLS = file.type === 'application/vnd.ms-excel';
-                    if(isXLS){
-                        return true;
-                    }
-                    const isXLSX = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-                    if (isXLSX) {
-                        return true;
-                    }
-                    this.$message.error('上传文件只能是xls或者xlsx格式!');
-                    return false;
-                },
-				//下载模板文件
-                downloadTemplate(){
-                    //window.location.href="../../ordersetting_template.xlsx";
-                    window.location.href="/orderSetting/download.do";
-                },
-				//上传成功提示
-                handleSuccess(response, file) {
-                    if(response.flag){
+        handleOrderSet(day){
+            this.$prompt('请输入预约人数', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputPattern: /^[0-9][0-9]*$/,
+                inputErrorMessage: '请输入合法的预约人数'
+            }).then(({ value }) => {
+                const date = this.formatDate(day.getFullYear(),day.getMonth()+1,day.getDate());
+                param = {
+                    orderDate: date,
+                    number: value
+                }
+                // 发送请求
+                axios.post('/orderSetting/settingOrderNumber.do?',param).then(res=>{
+                    if (res.data.flag){
+                        this.initData(date)
                         this.$message({
-                            message: response.message,
-                            type: 'success'
-                        });
-                    }else{
-                        this.$message.error(response.message);
+                            type: 'success',
+                            message: res.data.message
+                        })
+                    }else {
+                        this.$message.error(res.data.message);
                     }
-                    console.log(response, file, fileList);
-                },
-                //初始化当前页要展示的日期
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消输入'
+                });
+            });
+        },
+				//上传之前进行文件格式校验
+        beforeUpload(file){
+            const isXLS = file.type === 'application/vnd.ms-excel';
+            if(isXLS){
+                return true;
+            }
+            const isXLSX = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            if (isXLSX) {
+                return true;
+            }
+            this.$message.error('上传文件只能是xls或者xlsx格式!');
+            return false;
+        },
+				//下载模板文件
+        downloadTemplate(){
+            //window.location.href="../../ordersetting_template.xlsx";
+            window.location.href="/orderSetting/download.do";
+        },
+				//上传成功提示
+        handleSuccess(response, file) {
+            if(response.flag){
+                this.$message({
+                    message: response.message,
+                    type: 'success'
+                });
+            }else{
+                this.$message.error(response.message);
+            }
+            console.log(response, file, fileList);
+        },
+        //初始化当前页要展示的日期
 				initData: function (cur) {
                 var date;
                 var index = 0;   //控制显示预定的天数
@@ -240,34 +269,34 @@
                 })
             },
 				//切换到当前月份
-            goCurrentMonth: function (year, month) {
-                var d = new Date();
-                this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
-            },
+        goCurrentMonth: function (year, month) {
+            var d = new Date();
+            this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
+        },
 				//向前一个月
-            pickPre: function (year, month) {
-                // setDate(0); 上月最后一天
-                // setDate(-1); 上月倒数第二天
-                // setDate(dx) 参数dx为 上月最后一天的前后dx天
-                var d = new Date(this.formatDate(year, month, 1));
-                d.setDate(0);
-                this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
-            },
+        pickPre: function (year, month) {
+            // setDate(0); 上月最后一天
+            // setDate(-1); 上月倒数第二天
+            // setDate(dx) 参数dx为 上月最后一天的前后dx天
+            var d = new Date(this.formatDate(year, month, 1));
+            d.setDate(0);
+            this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
+        },
 				//向后一个月
-            pickNext: function (year, month) {
-                var d = new Date(this.formatDate(year, month, 1));
-                d.setDate(35);////获取指定天之后的日期
-                this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
-            },
-            // 返回 类似 2016-01-02 格式的字符串
-            formatDate: function (year, month, day) {
-                var y = year;
-                var m = month;
-                if (m < 10) m = "0" + m;
-                var d = day;
-                if (d < 10) d = "0" + d;
-                return y + "-" + m + "-" + d
-            }
+        pickNext: function (year, month) {
+            var d = new Date(this.formatDate(year, month, 1));
+            d.setDate(35);////获取指定天之后的日期
+            this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
+        },
+        // 返回 类似 2016-01-02 格式的字符串
+        formatDate: function (year, month, day) {
+            var y = year;
+            var m = month;
+            if (m < 10) m = "0" + m;
+            var d = day;
+            if (d < 10) d = "0" + d;
+            return y + "-" + m + "-" + d
+        }
         }
         })
     </script>

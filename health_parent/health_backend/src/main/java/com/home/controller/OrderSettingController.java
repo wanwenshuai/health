@@ -3,6 +3,7 @@ package com.home.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.home.constant.MessageConstant;
 import com.home.entity.Result;
+import com.home.model.OrderSetting;
 import com.home.service.OrderSettingService;
 import com.home.utils.POIUtils;
 import org.apache.poi.util.IOUtils;
@@ -16,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @date 2022/5/26 14:05
@@ -74,6 +76,28 @@ public class OrderSettingController {
     // 获取预约人数信息
     @PostMapping("/getOrderSettingByMonth.do")
     public Result getOrderSettingByMonth(String date){
-        return new Result(true,MessageConstant.GET_ORDERSETTING_SUCCESS);
+        Result result = null;
+        try{
+            List<Map<String,Integer>> maps = orderSettingService.queryOrderSettingByMonth(date);
+            result = new Result(true,MessageConstant.GET_ORDERSETTING_SUCCESS,maps);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new Result(false,MessageConstant.GET_ORDERSETTING_FAIL);
+        }
+        return result;
+    }
+
+    // 设置预约人数
+    @PostMapping("/settingOrderNumber.do")
+    public Result settingOrderNumber(@RequestBody OrderSetting orderSetting){
+        Result result = null;
+        try {
+            orderSettingService.orderSettingNumber(orderSetting);
+            result = new Result(true,MessageConstant.ORDERSETTING_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new Result(false,MessageConstant.ORDERSETTING_FAIL);
+        }
+        return result;
     }
 }

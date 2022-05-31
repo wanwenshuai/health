@@ -20,5 +20,9 @@
 		update t_ordersetting set
 		number=#{number} where orderDate=#{orderDate}
 	</update>
+	
+	<select id="selectOrderSettingByMonth" parameterType="map" resultType="com.home.model.OrderSetting">
+		select id,orderDate,number,reservations from t_ordersetting where orderDate between #{start} and #{end}
+	</select>
 
 </mapper>
